@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Page Components</title>
+        <!-- Bootstrap core CSS -->
+        <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    </head>
+    <body>
+        <!-- header -->
+        <header class="container col-5">
+            <div class="row bg-primary mb-3 pl-5" style="height: 50px;">
+                <div class="col-9 text-light align-self-center">
+                    <span>Cклад компьютерных частей</span>
+                </div>
+                <div class="col-3 align-self-center text-right pr-5">
+                    <form th:action="${mode} == 'list' ? @{/newPart} : @{/parts}" class="btn pb-0">
+                        <input th:if="${mode} == 'list'" class="align-self-center" type="image"
+                               th:src="@{/img/add_box_outline.svg}" style="filter: contrast(4) invert(1);">
+                        <button th:if="${mode} == null" type="submit" class="btn">
+                            <i th:if="${mode} == null" class="material-icons align-middle p-0 m-0"
+                               style="filter: contrast(4) invert(1);">arrow_back</i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </header>
+        <!-- footer -->
+        <footer class="container col-5">
+            <div class="row justify-content-center bg-light" style="height: 50px;">
+                <div class="align-self-center text-light">
+                    <span>My Test Footer</span>
+                </div>
+            </div>
+        </footer>
+        <!-- body -->
+        <div th:fragment="main">
+            <div th:if="${mode} == 'list'" th:include="views/list :: list">List View</div>
+            <div th:if="${mode} == null" th:include="views/single :: single" class="container col-5">Part View</div>
+        </div>
+        <!-- Bootstrap core JavaScript -->
+        <script th:src="@{/js/bootstrap.js}"></script>
+    </body>
+</html>

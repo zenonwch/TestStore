@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>List view</title>
+        <!-- Bootstrap core CSS -->
+        <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    </head>
+    <body>
+        <div th:fragment="list">
+            <div class="justify-content-center">
+                <table class="table table-bordered table-hover p-0 col-5" th:align="center" style="width:60%;">
+                    <thead>
+                        <tr class="bg-primary text-light p-0">
+                            <th class="align-middle p-1 pl-3">Наименование</th>
+                            <th class="text-center align-middle p-0">Необходимость</th>
+                            <th class="text-center align-middle p-0">Количество</th>
+                            <th class="text-center align-middle p-0">Операции</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="part : ${parts}" class="p-0">
+                            <td class="align-middle p-1 pl-3">
+                                <a th:href="@{'/parts/' + ${part.id}}" th:text="${part.name}"></a>
+                            </td>
+                            <td class="text-center align-middle p-0">
+                                <i th:if="${part.required}" class="material-icons align-middle p-0 m-0"
+                                   style="color:#007bff;">done_outline</i>
+                            </td>
+                            <td class="align-middle text-center p-0" th:text="${part.count}"></td>
+                            <td class="align-middle text-center p-0">
+                                <div class="row justify-content-center m-0 p-0">
+                                    <div class="col-4 m-0 p-0">
+                                        <form th:action="@{/parts/} + ${part.id}" th:method="get" class="m-0 p-0" id="edit">
+                                            <button type="submit" class="btn p-0 m-0 mr-2">
+                                                <i class="material-icons p-0 m-0 text-primary">edit</i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="col-4 m-0 p-0">
+                                        <form th:action="@{/parts/} + ${part.id}" th:method="delete" class="m-0 p-0">
+                                            <button type="submit" class="btn p-0 m-0 ml-2">
+                                                <i class="material-icons p-0 m-0 text-primary">delete_outline</i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="container col-5 justify-content-center align-self-center mb-3">
+                <span>Количество компьютеров, которое можно собрать из имеющихся запчастей: <strong th:text="${canAssemble}" class="text-primary"></strong> шт.</span>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript -->
+        <script th:src="@{/js/bootstrap.js}"></script>
+    </body>
+</html>

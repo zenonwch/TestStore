@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Available Parts</title>
+        <!-- Bootstrap core CSS -->
+        <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+        <!-- Google material icons -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="components :: header">Header</div>
+        <div th:replace="components :: main">Main Part</div>
+        <div th:replace="components :: footer">Footer</div>
+        <!-- Bootstrap core JavaScript -->
+        <script th:src="@{/js/bootstrap.js}"></script>
+    </body>
+</html>

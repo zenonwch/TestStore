@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Available Parts</title>
+        <!-- Bootstrap core CSS -->
+        <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+        <!-- Google material icons -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+        <div th:fragment="view" class="justify-content-center">
+            <div class="container col-5 border">
+                <div class="row border">
+                    <div class="col-3 text-right">
+                        <span>Наименование</span>
+                    </div>
+                    <div class="col-5 text-left">
+                        <span th:text="${part.name}" class="pl-1"></span>
+                    </div>
+                </div>
+                <div class="row border">
+                    <div class="col-3 text-right">
+                        <span>Необходимость</span>
+                    </div>
+                    <div class="col-5">
+                        <i th:if="${part.required}" class="material-icons align-middle p-0 pl-5">done_outline</i>
+                    </div>
+                </div>
+                <div class="row border">
+                    <div class="col-3 text-right">
+                        <span>Количество</span>
+                    </div>
+                    <div class="col-5 text-left">
+                        <span th:text="${part.count}" class="pl-5"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript -->
+        <script th:src="@{/js/bootstrap.js}"></script>
+    </body>
+</html>
