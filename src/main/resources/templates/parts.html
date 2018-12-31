@@ -7,6 +7,16 @@
         <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
         <!-- Google material icons -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <style>
+            .disabled {
+                pointer-events: none;
+                opacity: 0.5;
+            }
+            .pointer-disabled {
+                pointer-events: none;
+            }
+        </style>
     </head>
     <body>
         <div th:replace="components :: header">Header</div>
