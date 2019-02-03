@@ -13,22 +13,22 @@
             <div class="row justify-content-end pr-3">
                 <div class="align-self-center">
                     <div class="btn-toolbar">
-                        <div class="btn-group">
+                        <div class="btn-group" th:with="currentUrl=(${@urlUtils.currentUrlReplaceParam('page')})">
                             <div th:class="'btn btn-light border ' + @{${paging.currentPage == 0} ? 'disabled'}"><a
-                                    class="pageLink" th:href="@{/parts(page=1)}">«</a>
+                                    class="pageLink" th:href="@{${currentUrl}(page=1)}">«</a>
                             </div>
                             <div th:class="'btn btn-light border ' + @{${paging.currentPage == 0} ? disabled}"><a
-                                    class="pageLink" th:href="@{/parts(page=${paging.currentPage})}">←</a>
+                                    class="pageLink" th:href="@{${currentUrl}(page=${paging.currentPage})}">←</a>
                             </div>
                             <div th:class="'btn btn-light border ' + @{${paging.currentPage == (page - 1)} ? 'active pointer-disabled'}"
                                  th:each="page : ${#numbers.sequence(paging.startPage, paging.endPage)}">
-                                <a class="pageLink" th:href="@{/parts(page=${page})}" th:text="${page}"></a>
+                                <a class="pageLink" th:href="@{${currentUrl}(page=${page})}" th:text="${page}"></a>
                             </div>
                             <div th:class="'btn btn-light border ' + @{${paging.currentPage  + 1 == paging.totalPages} ? disabled}">
-                                <a class="pageLink" th:href="@{/parts(page=${paging.currentPage + 2})}">→</a>
+                                <a class="pageLink" th:href="@{${currentUrl}(page=${paging.currentPage + 2})}">→</a>
                             </div>
                             <div th:class="'btn btn-light border ' + @{${paging.currentPage  + 1 == paging.totalPages} ? disabled}">
-                                <a class="pageLink" th:href="@{/parts(page=${paging.totalPages})}">»</a>
+                                <a class="pageLink" th:href="@{${currentUrl}(page=${paging.totalPages})}">»</a>
                             </div>
                         </div>
                     </div>

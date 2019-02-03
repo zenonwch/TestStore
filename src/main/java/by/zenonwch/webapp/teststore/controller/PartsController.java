@@ -4,19 +4,36 @@ import by.zenonwch.webapp.teststore.dto.Paging;
 import by.zenonwch.webapp.teststore.dto.PartDto;
 import by.zenonwch.webapp.teststore.model.PartModel;
 import by.zenonwch.webapp.teststore.service.PartService;
+import by.zenonwch.webapp.teststore.util.JsonMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class PartsController {
-    private static final String INITIAL_PAGE = "1";
-    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final char PERCENT_SIGN = '%';
+    private static final String DEFAULT_PAGE = "1";
+    private static final String DEFAULT_PAGE_SIZE = "10";
+    private static final String DEFAULT_SORT_FIELD = "name";
+    private static final String DEFAULT_SORT_DIR = "ASC";
+    private static final String DEFAULT_FILTERS = "";
 
     private final PartService partService;
 
@@ -35,12 +52,19 @@ public class PartsController {
     }
 
     @GetMapping("/parts")
-    public String getAllParts(
-            final Model model,
-            @RequestParam(name = "page", defaultValue = INITIAL_PAGE) final int page
-    ) {
+    public String getAllParts(final Model model,
+                              @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) final int page,
+                              @RequestParam(name = "size", defaultValue = DEFAULT_PAGE_SIZE) final int size,
+                              @RequestParam(name = "sortField", defaultValue = DEFAULT_SORT_FIELD) final String sortBy,
+                              @RequestParam(name = "sortDir", defaultValue = DEFAULT_SORT_DIR) final String sortDir,
+                              @RequestParam(name = "filters", defaultValue = DEFAULT_FILTERS) final String filters) {
+
         final int pageNumber = page < 1 ? 0 : page - 1;
-        final Page<PartModel> partList = partService.getParts(pageNumber, DEFAULT_PAGE_SIZE);
+        final Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+
+        final Specification<PartModel> specification = createPartSpecification(filters);
+
+        final Page<PartModel> partList = partService.getParts(specification, pageable);
 
         final List<PartDto> partDtoList = partList.stream()
                 .map(PartModel::toDto)
@@ -91,5 +115,28 @@ public class PartsController {
 
         model.addAttribute("mode", "list");
         return "redirect:/parts";
+    }
+
+    private Specification<PartModel> createPartSpecification(final String filters) {
+        final Map<String, String> filterMap = filters == null || filters.isEmpty()
+                ? Collections.emptyMap()
+                : JsonMapper.fromJsonToMap(filters);
+
+        return (Specification<PartModel>) (root, query, cb) -> {
+
+            final Function<String, Predicate> buildPredicate = key -> {
+                final Path<String> value = root.get(key);
+                final Expression<String> expression = cb.lower(value);
+                final String pattern = PERCENT_SIGN + filterMap.get(key).toLowerCase() + PERCENT_SIGN;
+
+                return cb.like(expression, pattern);
+            };
+
+            final Predicate[] predicates = filterMap.keySet().stream()
+                    .map(buildPredicate)
+                    .toArray(Predicate[]::new);
+
+            return cb.and(predicates);
+        };
     }
 }

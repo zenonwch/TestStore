@@ -11,10 +11,26 @@
             <div class="justify-content-center">
                 <table class="table table-bordered table-hover p-0 col-5" th:align="center" style="width:60%;">
                     <thead>
-                        <tr class="bg-primary text-light p-0">
-                            <th class="align-middle p-1 pl-3">Наименование</th>
-                            <th class="text-center align-middle p-0">Необходимость</th>
-                            <th class="text-center align-middle p-0">Количество</th>
+                        <tr class="bg-primary text-light p-0"
+                            th:with="currentUrl=(${@urlUtils.currentUrlReplaceParam('sortField', 'sortDir')})">
+                            <th class="align-middle p-1 pl-3">
+                                <a class="text-light"
+                                   th:href="@{${currentUrl}(sortField='name',
+                                    sortDir=${(param.sortField != null) and (param.sortField[0] == 'name') and (param.sortDir != null) and (param.sortDir[0] == 'ASC')} ? 'DESC' : 'ASC')}">
+                                    Наименование </a>
+                            </th>
+                            <th class="text-center align-middle p-0">
+                                <a class="text-light"
+                                   th:href="@{${currentUrl}(sortField='required',
+                                   sortDir=${(param.sortField != null) and (param.sortField[0] == 'required') and (param.sortDir != null) and (param.sortDir[0] == 'ASC')} ? 'DESC' : 'ASC')}">
+                                    Необходимость</a>
+                            </th>
+                            <th class="text-center align-middle p-0">
+                                <a class="text-light"
+                                   th:href="@{${currentUrl}(sortField='count',
+                                   sortDir=${(param.sortField != null) and (param.sortField[0] == 'count') and (param.sortDir != null) and (param.sortDir[0] == 'ASC')} ? 'DESC' : 'ASC')}">
+                                    Количество</a>
+                            </th>
                             <th class="text-center align-middle p-0">Операции</th>
                         </tr>
                     </thead>
@@ -31,7 +47,8 @@
                             <td class="align-middle text-center p-0">
                                 <div class="row justify-content-center m-0 p-0">
                                     <div class="col-4 m-0 p-0">
-                                        <form th:action="@{/parts/} + ${part.id}" th:method="get" class="m-0 p-0" id="edit">
+                                        <form th:action="@{/parts/} + ${part.id}" th:method="get" class="m-0 p-0"
+                                              id="edit">
                                             <button type="submit" class="btn p-0 m-0 mr-2">
                                                 <i class="material-icons p-0 m-0 text-primary">edit</i>
                                             </button>
@@ -51,7 +68,8 @@
                 </table>
             </div>
             <div class="container col-5 justify-content-center align-self-center mb-3">
-                <span>Количество компьютеров, которое можно собрать из имеющихся запчастей: <strong th:text="${canAssemble}" class="text-primary"></strong> шт.</span>
+                <span>Количество компьютеров, которое можно собрать из имеющихся запчастей: <strong
+                        th:text="${canAssemble}" class="text-primary"></strong> шт.</span>
             </div>
         </div>
         <!-- Bootstrap core JavaScript -->

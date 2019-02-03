@@ -2,10 +2,10 @@ package by.zenonwch.webapp.teststore.service;
 
 import by.zenonwch.webapp.teststore.exception.PartNotFoundException;
 import by.zenonwch.webapp.teststore.model.PartModel;
-import by.zenonwch.webapp.teststore.repo.PagingPartRepo;
 import by.zenonwch.webapp.teststore.repo.PartRepo;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +16,9 @@ import java.util.Optional;
 public class PartServiceImpl implements PartService {
 
     private final PartRepo partRepo;
-    private final PagingPartRepo pagingPartRepo;
 
-    public PartServiceImpl(final PartRepo partRepo, final PagingPartRepo pagingPartRepo) {
+    public PartServiceImpl(final PartRepo partRepo) {
         this.partRepo = partRepo;
-        this.pagingPartRepo = pagingPartRepo;
     }
 
     @Override
@@ -49,8 +47,8 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PartModel> getParts(final int page, final int size) {
-        return pagingPartRepo.findAll(PageRequest.of(page, size));
+    public Page<PartModel> getParts(final Specification<PartModel> specification, final Pageable pageable) {
+        return partRepo.findAll(specification, pageable);
     }
 
     @Override
